@@ -2,14 +2,14 @@
 # match_school.rb
 
 def match_school(input)
-  # Regular expression to match "School"
-  regex = /\bSchool\b/
+  # Regular expression to match "School" case-insensitively
+  regex = /\bSchool\b/i
 
   # Check if the input matches the regular expression
   if input.match?(regex)
-    puts "The input contains the word 'School'."
+    puts "Correct output with 'School'"
   else
-    puts "The input does not contain the word 'School'."
+    puts "Incorrect output with 'School'"
   end
 end
 
