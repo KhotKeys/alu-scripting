@@ -1,17 +1,34 @@
 #!/usr/bin/python3
-"""This function retrieves the top ten posts of a given subreddit"""
-
 import requests
 
-
 def top_ten(subreddit):
-    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    headers = {"User-Agent": "My User Agent 1.0"}
-    feedback = requests.get(url, headers=headers)
+    # URL for Reddit API endpoint to get hot posts
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
 
-    if feedback.status_code != 200:
-        print(None)
+    # Set custom User-Agent header to avoid "403 Forbidden" error
+    headers = {'User-Agent': 'MyBot/0.0.1'}
+
+    # Make GET request to Reddit API
+    response = requests.get(url, headers=headers)
+
+    # Check if response is successful
+    if response.status_code == 200:
+        # Parse JSON response
+        data = response.json()
+
+        # Check if subreddit exists
+        if 'error' in data:
+            print("None")
+            return
+
+        # Extract titles of the first 10 hot posts
+        posts = data['data']['children']
+        print(f"Top 10 hot posts in r/{subreddit}:\n")
+        for post in posts:
+            title = post['data']['title']
+            print(title)
     else:
-        data = feedback.json().get("data").get("children")
-        for post in data:
-            print(post.get("data").get("title"))
+        print("Failed to retrieve data from Reddit API")
+
+# Example usage
+top_ten("python")
