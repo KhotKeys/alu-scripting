@@ -1,12 +1,32 @@
-#!/usr/bin/python3
-"""
-0-main
-"""
-import sys
+#!usr/bin/python3
+import requests
 
-if __name__ == '__main__':
-    number_of_subscribers = __import__('0-subs').number_of_subscribers
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
+def number_of_subscribers(subreddit):
+    # URL for Reddit API endpoint to get subreddit information
+    url = f"https://www.reddit.com/r/{subreddit}/about.json"
+
+    # Set custom User-Agent header to avoid "403 Forbidden" error
+    headers = {'User-Agent': 'MyBot/0.0.1'}
+
+    # Make GET request to Reddit API
+    response = requests.get(url, headers=headers)
+
+    # Check if response is successful
+    if response.status_code == 200:
+        # Parse JSON response
+        data = response.json()
+
+        # Check if subreddit exists
+        if 'error' in data:
+            return 0
+
+        # Extract number of subscribers
+        subscribers = data['data']['subscribers']
+        return subscribers
     else:
-        print("{:d}".format(number_of_subscribers(sys.argv[1])))
+        print("Failed to retrieve data from Reddit API")
+        return 0
+
+# Example usage
+subscribers = number_of_subscribers("python")
+print(f"The number of subscribers in r/python is: {subscribers}")
